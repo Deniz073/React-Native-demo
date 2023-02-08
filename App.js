@@ -1,43 +1,80 @@
 import { useEffect, useState } from 'react';
-import { SafeAreaView, View, Text, FlatList, TouchableOpacity, Button, TextInput, StyleSheet } from 'react-native';
+import { SafeAreaView, View, Text, FlatList, TouchableOpacity, Button, TextInput, StyleSheet, Platform } from 'react-native';
+import SelectDropDown from './components/SelectDropDown';
 import NewsItem from './components/NewsItem';
+import axios from 'axios';
 
 export default function App() {
   const [news, setNews] = useState([]);
-  const [newsData, setNewsData] = useState({ title: '', content: '' });
+  const [categories, setCategories] = useState([]);
+  const [newsData, setNewsData] = useState({ title: '', content: '', categoryId: null });
 
-  useEffect(() => {
+  function fetchData() {
 
-    fetch('http://192.168.2.11:8000/api/news')
-      .then(response => response.json())
-      .then(data => {
-        setNews(data);
+    axios.get('https://deniz-erdem.eu-1.sharedwithexpose.com/api/news')
+      .then(response => {
+        setNews(response.data.newsItems);
+        setCategories(response.data.categories);
       })
       .catch(error => {
         console.error(error);
       });
+  }
+
+  function handleAdd() {
+
+    axios.post('https://deniz-erdem.eu-1.sharedwithexpose.com/api/news', newsData)
+      .then(response => {
+        console.log(response.data)
+        setNewsData({ title: '', content: '', categoryId: null })
+        fetchData();
+      })
+      .catch(error => {
+        console.error(error.response.data.errors);
+      });
+  }
+
+  useEffect(() => {
+
+    fetchData();
 
   }, []);
 
-  function handleAdd() {
-    setNews(
-      [...news, { id: news.length + 2, title: newsData.title, content: newsData.content }]
-    )
-  }
 
   return (
-    <SafeAreaView>
-      <Text>React native demo</Text>
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.header}>React native demo</Text>
 
       <FlatList
+        style={{ height: 400 }}
         data={news}
-        renderItem={({ item }) => <NewsItem title={item.title} content={item.content} category={item.category.name} />}
+        renderItem={({ item }) => <NewsItem title={item.title} content={item.content} category={item.category?.name} />}
         keyExtractor={item => item.id}
       />
 
       <View>
-        <TextInput style={styles.textInput} placeholder="Title" onChangeText={text => setNewsData({ ...newsData, title: text })} />
-        <TextInput style={styles.textInput} placeholder="Content" onChangeText={text => setNewsData({ ...newsData, content: text })} />
+        <TextInput 
+          style={styles.textInput} 
+          placeholder="Title" 
+          value={newsData.title} 
+          onChangeText={text => setNewsData({ ...newsData, title: text })} 
+        />
+
+        <TextInput 
+          style={styles.textInput} 
+          placeholder="Content" 
+          value={newsData.content} 
+          onChangeText={text => setNewsData({ ...newsData, content: text })} 
+        />
+
+        <SelectDropDown
+          data={categories}
+          defaultText="Select category"
+          itemTextProperty="name"
+          onSelect={(selectedItem, index) => {
+            setNewsData({ ...newsData, categoryId: selectedItem.id })
+          }}
+        />
 
         <View style={styles.buttonGroup}>
           <Button title="Add" onPress={handleAdd} />
@@ -46,13 +83,21 @@ export default function App() {
             <Text style={{ color: "red" }}>Voeg toe</Text>
           </TouchableOpacity>
         </View>
-      </View>
 
+      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    marginTop: Platform.OS === 'android' ? 25 : 0,
+  },
+  header: {
+    fontSize: 30,
+    textAlign: 'center',
+    margin: 10,
+  },
   buttonGroup: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -64,7 +109,7 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     padding: 10,
     margin: 10,
-  }
+  },
 });
 
 
