@@ -1,45 +1,40 @@
-import { useEffect, useState } from 'react';
-import { SafeAreaView, View, Text, FlatList, TouchableOpacity, Button, TextInput, StyleSheet, Platform } from 'react-native';
-import SelectDropDown from './components/SelectDropDown';
-import NewsItem from './components/NewsItem';
-import axios from 'axios';
+import { useEffect, useState } from 'react'
+import { SafeAreaView, View, Text, FlatList, TouchableOpacity, Button, TextInput, StyleSheet, Platform } from 'react-native'
+import Dropdown from './components/Dropdown'
+import NewsItem from './components/NewsItem'
+import axios from 'axios'
 
-export default function App() {
-  const [news, setNews] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [newsData, setNewsData] = useState({ title: '', content: '', categoryId: null });
+export default function App () {
+  const [news, setNews] = useState([])
+  const [categories, setCategories] = useState([])
+  const [newsData, setNewsData] = useState({ title: '', content: '', categoryId: null })
 
-  function fetchData() {
-
-    axios.get('https://deniz-erdem.eu-1.sharedwithexpose.com/api/news')
+  function fetchData () {
+    axios.get('https://12700.eu-1.sharedwithexpose.com/api/news')
       .then(response => {
-        setNews(response.data.newsItems);
-        setCategories(response.data.categories);
+        setNews(response.data.newsItems)
+        setCategories(response.data.categories)
       })
       .catch(error => {
-        console.error(error);
-      });
+        console.error(error)
+      })
   }
 
-  function handleAdd() {
-
-    axios.post('https://deniz-erdem.eu-1.sharedwithexpose.com/api/news', newsData)
+  function handleAdd () {
+    axios.post('https://12700.eu-1.sharedwithexpose.com/api/news', newsData)
       .then(response => {
         console.log(response.data)
         setNewsData({ title: '', content: '', categoryId: null })
-        fetchData();
+        fetchData()
       })
       .catch(error => {
-        console.error(error.response.data.errors);
-      });
+        console.error(error.response.data.errors)
+      })
   }
 
   useEffect(() => {
-
-    fetchData();
-
-  }, []);
-
+    fetchData()
+  }, [])
 
   return (
     <SafeAreaView style={styles.container}>
@@ -53,21 +48,21 @@ export default function App() {
       />
 
       <View>
-        <TextInput 
-          style={styles.textInput} 
-          placeholder="Title" 
-          value={newsData.title} 
-          onChangeText={text => setNewsData({ ...newsData, title: text })} 
+        <TextInput
+          style={styles.textInput}
+          placeholder="Title"
+          value={newsData.title}
+          onChangeText={text => setNewsData({ ...newsData, title: text })}
         />
 
-        <TextInput 
-          style={styles.textInput} 
-          placeholder="Content" 
-          value={newsData.content} 
-          onChangeText={text => setNewsData({ ...newsData, content: text })} 
+        <TextInput
+          style={styles.textInput}
+          placeholder="Content"
+          value={newsData.content}
+          onChangeText={text => setNewsData({ ...newsData, content: text })}
         />
 
-        <SelectDropDown
+        <Dropdown
           data={categories}
           defaultText="Select category"
           itemTextProperty="name"
@@ -80,38 +75,34 @@ export default function App() {
           <Button title="Add" onPress={handleAdd} />
 
           <TouchableOpacity onPress={handleAdd}>
-            <Text style={{ color: "red" }}>Voeg toe</Text>
+            <Text style={{ color: 'red' }}>Voeg toe</Text>
           </TouchableOpacity>
         </View>
 
       </View>
     </SafeAreaView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: Platform.OS === 'android' ? 25 : 0,
+    marginTop: Platform.OS === 'android' ? 25 : 0
   },
   header: {
     fontSize: 30,
     textAlign: 'center',
-    margin: 10,
+    margin: 10
   },
   buttonGroup: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    width: '100%',
+    width: '100%'
   },
   textInput: {
     borderWidth: 1,
     borderColor: 'black',
     padding: 10,
-    margin: 10,
-  },
-});
-
-
-
-
+    margin: 10
+  }
+})
