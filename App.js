@@ -32,6 +32,18 @@ export default function App () {
       })
   }
 
+  function handleUpdate () {
+    axios.put(`https://jeroenrietveld01.eu-1.sharedwithexpose.com/api/news/${newsData.id}`, newsData)
+      .then(response => {
+        console.log(response.data)
+        setNewsData({ title: '', content: '', categoryId: null })
+        fetchData()
+      })
+      .catch(error => {
+        console.error(error.response.data.errors)
+      })
+  }
+
   function handleDelete (id) {
     axios.delete(`https://jeroenrietveld01.eu-1.sharedwithexpose.com/api/news/${id}`)
       .then(response => {
@@ -54,7 +66,7 @@ export default function App () {
       <FlatList
         style={{ height: 400 }}
         data={news}
-        renderItem={({ item }) => <NewsItem title={item.title} content={item.content} category={item.category?.name} handleDelete={handleDelete} id={item.id} />}
+        renderItem={({ item }) => <NewsItem item={item} handleDelete={handleDelete} />}
         keyExtractor={item => item.id}
       />
 
