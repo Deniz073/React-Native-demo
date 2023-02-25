@@ -10,7 +10,7 @@ export default function App () {
   const [newsData, setNewsData] = useState({ title: '', content: '', categoryId: null })
 
   function fetchData () {
-    axios.get('https://12700.eu-1.sharedwithexpose.com/api/news')
+    axios.get('https://noorschreuder.eu-1.sharedwithexpose.com/api/news')
       .then(response => {
         setNews(response.data.newsItems)
         setCategories(response.data.categories)
@@ -21,10 +21,33 @@ export default function App () {
   }
 
   function handleAdd () {
-    axios.post('https://12700.eu-1.sharedwithexpose.com/api/news', newsData)
+    axios.post('https://noorschreuder.eu-1.sharedwithexpose.com/api/news', newsData)
       .then(response => {
         console.log(response.data)
         setNewsData({ title: '', content: '', categoryId: null })
+        fetchData()
+      })
+      .catch(error => {
+        console.error(error.response.data.errors)
+      })
+  }
+
+  function handleUpdate () {
+    axios.put(`https://noorschreuder.eu-1.sharedwithexpose.com/api/news/${newsData.id}`, newsData)
+      .then(response => {
+        console.log(response.data)
+        setNewsData({ title: '', content: '', categoryId: null })
+        fetchData()
+      })
+      .catch(error => {
+        console.error(error.response.data.errors)
+      })
+  }
+
+  function handleDelete (id) {
+    axios.delete(`https://noorschreuder.eu-1.sharedwithexpose.com/api/news/${id}`)
+      .then(response => {
+        console.log(response.data)
         fetchData()
       })
       .catch(error => {
