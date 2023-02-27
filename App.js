@@ -16,7 +16,7 @@ export default function App () {
         setCategories(response.data.categories)
       })
       .catch(error => {
-        console.error(error)
+        console.error(error.response.data)
       })
   }
 
@@ -24,11 +24,23 @@ export default function App () {
     axios.post('https://12700.eu-1.sharedwithexpose.com/api/news', newsData)
       .then(response => {
         console.log(response.data)
-        setNewsData({ title: '', content: '', categoryId: null })
+        setNewsData({ id: '', title: '', content: '', categoryId: null })
         fetchData()
       })
       .catch(error => {
         console.error(error.response.data.errors)
+      })
+  }
+
+  function handleDelete (id) {
+    // eslint-disable-next-line no-template-curly-in-string
+    axios.delete(`https://12700.eu-1.sharedwithexpose.com/api/news/${id}`)
+      .then(response => {
+        console.log(response.data)
+        fetchData()
+      })
+      .catch(error => {
+        console.error(error.response.data)
       })
   }
 
@@ -43,7 +55,7 @@ export default function App () {
       <FlatList
         style={{ height: 400 }}
         data={news}
-        renderItem={({ item }) => <NewsItem title={item.title} content={item.content} category={item.category?.name} />}
+        renderItem={({ item }) => <NewsItem newsItem={item} handleDelete={handleDelete} />}
         keyExtractor={item => item.id}
       />
 

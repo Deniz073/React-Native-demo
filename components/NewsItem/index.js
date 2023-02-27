@@ -1,12 +1,13 @@
-import { Text, View } from 'react-native'
+import { Text, View, Button } from 'react-native'
 import styles from './NewsItem.component.style'
 
-export default function NewsItem ({ title, content, category }) {
+export default function NewsItem ({ newsItem, handleDelete }) {
   return (
     <View style={styles.item}>
-      <Text style={styles.title}>{title} - {category}</Text>
+      <Text style={styles.title}>{newsItem.title} - {newsItem.category.name}</Text>
       <View style={{ borderBottomColor: 'black', borderBottomWidth: 1 }} />
-      <Text>{content}</Text>
+      <Text>{newsItem.content}</Text>
+      <Button title='Delete' onPress={() => handleDelete(newsItem.id)}></Button>
     </View>
   )
 }
