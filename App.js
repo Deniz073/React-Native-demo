@@ -20,6 +20,15 @@ export default function App () {
       })
   }
 
+  function handleDestroy (id) {
+    axios.delete('https://12700.eu-1.sharedwithexpose.com/api/news/' + id)
+      .then(response => {
+        fetchData()
+      })
+      .catch(error => {
+      })
+  }
+
   function handleAdd () {
     axios.post('https://12700.eu-1.sharedwithexpose.com/api/news', newsData)
       .then(response => {
@@ -32,6 +41,8 @@ export default function App () {
       })
   }
 
+  
+
   useEffect(() => {
     fetchData()
   }, [])
@@ -43,8 +54,9 @@ export default function App () {
       <FlatList
         style={{ height: 400 }}
         data={news}
-        renderItem={({ item }) => <NewsItem title={item.title} content={item.content} category={item.category?.name} />}
+        renderItem={({ item }) => <NewsItem title={item.title} content={item.content} category={item.category?.name} id={item.id} handleDestroy={handleDestroy} />}
         keyExtractor={item => item.id}
+        
       />
 
       <View>
@@ -75,7 +87,7 @@ export default function App () {
           <Button title="Add" onPress={handleAdd} />
 
           <TouchableOpacity onPress={handleAdd}>
-            <Text style={{ color: 'red' }}>Voeg toe</Text>
+            <Text style={{ color: 'red' }}>voeg toe</Text>
           </TouchableOpacity>
         </View>
 
