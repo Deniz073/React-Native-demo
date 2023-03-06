@@ -10,7 +10,7 @@ export default function App () {
   const [newsData, setNewsData] = useState({ title: '', content: '', categoryId: null })
 
   function fetchData () {
-    axios.get('https://8517-2001-1c03-6609-e700-2c4c-9abc-8a30-21f4.eu.ngrok.io/api/news')
+    axios.get('https://e503-2001-1c03-6609-e700-2c4c-9abc-8a30-21f4.eu.ngrok.io/api/news')
       .then(response => {
         setNews(response.data.newsItems)
         setCategories(response.data.categories)
@@ -21,7 +21,7 @@ export default function App () {
   }
 
   function handleAdd () {
-    axios.post('https://8517-2001-1c03-6609-e700-2c4c-9abc-8a30-21f4.eu.ngrok.io/api/news', newsData)
+    axios.post('https://e503-2001-1c03-6609-e700-2c4c-9abc-8a30-21f4.eu.ngrok.io/api/news', newsData)
       .then(response => {
         console.log(response.data)
         setNewsData({ title: '', content: '', categoryId: null })
@@ -33,7 +33,7 @@ export default function App () {
   }
 
   function handleUpdate () {
-    axios.put(`https://8517-2001-1c03-6609-e700-2c4c-9abc-8a30-21f4.eu.ngrok.io/api/news/${newsData.id}`, newsData)
+    axios.put(`https://e503-2001-1c03-6609-e700-2c4c-9abc-8a30-21f4.eu.ngrok.io/api/news/${newsData.id}`, newsData)
       .then(response => {
         console.log(response.data)
         setNewsData({ title: '', content: '', categoryId: null })
@@ -45,13 +45,11 @@ export default function App () {
   }
 
   function handleDelete (id) {
-    axios.delete(`https://8517-2001-1c03-6609-e700-2c4c-9abc-8a30-21f4.eu.ngrok.io/api/news/${id}`)
+    axios.delete(`https://e503-2001-1c03-6609-e700-2c4c-9abc-8a30-21f4.eu.ngrok.io/api/news/${id}`)
       .then(response => {
-        console.log(response.data)
         fetchData()
       })
       .catch(error => {
-        console.error(error.response.data.errors)
       })
   }
 
@@ -66,7 +64,7 @@ export default function App () {
       <FlatList
         style={{ height: 400 }}
         data={news}
-        renderItem={({ item }) => <NewsItem title={item.title} content={item.content} category={item.category?.name} />}
+        renderItem={({ item }) => <NewsItem item={item} handleDelete={handleDelete}/>}
         keyExtractor={item => item.id}
       />
 
