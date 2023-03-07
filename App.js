@@ -9,9 +9,12 @@ export default function App () {
   const [categories, setCategories] = useState([])
   const [newsData, setNewsData] = useState({ title: '', content: '', categoryId: null })
 
+  const setNewsParent = (newNews) => {setNews(newNews)}
+
   function fetchData () {
-    axios.get('https://12700.eu-1.sharedwithexpose.com/api/news')
+    axios.get('https://joeyvs.eu-1.sharedwithexpose.com/api/news')
       .then(response => {
+        this.props
         setNews(response.data.newsItems)
         setCategories(response.data.categories)
       })
@@ -21,7 +24,7 @@ export default function App () {
   }
 
   function handleAdd () {
-    axios.post('https://12700.eu-1.sharedwithexpose.com/api/news', newsData)
+    axios.post('https://joeyvs.eu-1.sharedwithexpose.com/api/news', newsData)
       .then(response => {
         console.log(response.data)
         setNewsData({ title: '', content: '', categoryId: null })
@@ -43,7 +46,7 @@ export default function App () {
       <FlatList
         style={{ height: 400 }}
         data={news}
-        renderItem={({ item }) => <NewsItem title={item.title} content={item.content} category={item.category?.name} />}
+        renderItem={({ item }) => <NewsItem id={item.id} title={item.title} content={item.content} category={item.category?.name} setNews={setNewsParent} />}
         keyExtractor={item => item.id}
       />
 
