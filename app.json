@@ -31,10 +31,16 @@
       "permissions": [
         "READ_CALENDAR",
         "WRITE_CALENDAR"
-      ]
+      ],
+      "package": "com.joeyvs.reactdemo"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "e61377a8-a5d7-417d-838b-f719051e1430"
+      }
     }
   }
 }
